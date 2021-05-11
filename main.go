@@ -19,8 +19,13 @@ var count int
 func init() {
 	var err error
 	s, err = discordgo.New("Bot " + os.Args[1])
-	if err != nil {
+	if len(os.Args) < 3 {
+		log.Fatal("go run main.go [DISCORD KEY] [NEWS-API KEY]")
+		os.Exit(1)
+	}
+	if err != nil || len(os.Args) < 3 {
 		log.Fatal("New bot error")
+		os.Exit(1)
 	}
 	c = newsapi.NewClient(os.Args[2], newsapi.WithHTTPClient(http.DefaultClient))
 }
@@ -28,6 +33,7 @@ func init() {
 func main() {
 	commands := map[string]func(cid string, m string){
 		"taco": Reply,
+		"xkcd": Xkcd,
 		"get":  Get,
 		"next": Next,
 		"prev": Prev,

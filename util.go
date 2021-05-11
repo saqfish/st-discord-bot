@@ -14,3 +14,13 @@ func AtoE(a newsapi.Article) *discordgo.MessageEmbed {
 		Author:      &discordgo.MessageEmbedAuthor{Name: a.Author},
 	}
 }
+
+func CtoE(c Comic) *discordgo.MessageEmbed {
+	return &discordgo.MessageEmbed{
+		URL:         c.Img,
+		Type:        discordgo.EmbedTypeRich,
+		Title:       c.Safe_title,
+		Image:       &discordgo.MessageEmbedImage{URL: c.Img},
+		Description: c.Alt,
+	}
+}
