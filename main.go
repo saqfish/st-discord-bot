@@ -33,11 +33,12 @@ func init() {
 
 func main() {
 	commands := map[string]func(cid string, m string, args []string){
-		"taco": Reply,
-		"xkcd": Xkcd,
-		"get":  Get,
-		"next": Next,
-		"prev": Prev,
+		"taco":    Reply,
+		"xkcd":    Xkcd,
+		"news":    News,
+		"article": Article,
+		"next":    Next,
+		"prev":    Prev,
 	}
 
 	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
