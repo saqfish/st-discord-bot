@@ -4,7 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func Reply(cid string, m string) {
+func Reply(cid string, m string, args []string) {
 	s.ChannelMessageSend(cid, m)
 }
 

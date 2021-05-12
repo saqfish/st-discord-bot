@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type Comic struct {
@@ -30,15 +30,22 @@ func readComic(body []byte) (*Comic, error) {
 	}
 	return s, err
 }
-func Xkcd(cid string, m string) {
-	url := fmt.Sprintf("http://xkcd.com/%d/info.0.json", rand.Intn(600))
+func Xkcd(cid string, m string, args []string) {
+	num, err := strconv.ParseInt(args[0], 10, 62)
+	if err != nil {
+		Reply(cid, "Invalid arg", nil)
+		return
+	}
+	url := fmt.Sprintf("http://xkcd.com/%d/info.0.json", num)
 	res, err := http.Get(url)
 	if err != nil {
-		Reply(cid, "Couldn't get comic")
+		Reply(cid, "Couldn't get comic", nil)
+		return
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		Reply(cid, "Couldn't get comic")
+		Reply(cid, "Couldn't get comic", nil)
+		return
 	}
 	r, err := readComic([]byte(body))
 	Ereply(cid, CtoE(*r))

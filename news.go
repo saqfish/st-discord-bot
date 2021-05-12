@@ -7,7 +7,7 @@ import (
 	"github.com/barthr/newsapi"
 )
 
-func Get(cid string, m string) {
+func Get(cid string, m string, args []string) {
 	hl, _ := c.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
 		Sources: []string{"google-news", "NPR"},
 	})
@@ -15,33 +15,33 @@ func Get(cid string, m string) {
 		ars = append(ars, a)
 	}
 	msg := fmt.Sprintf("Got %d articles", len(ars))
-	Reply(cid, msg)
+	Reply(cid, msg, nil)
 }
 
-func Prev(cid string, s string) {
+func Prev(cid string, s string, args []string) {
 	if count == 0 {
-		Reply(cid, "No more")
+		Reply(cid, "No more", nil)
 		return
 	} else {
 		count--
 	}
 	if len(ars) == 0 {
-		Reply(cid, "Get articles first fool")
+		Reply(cid, "Get articles first fool", nil)
 		return
 	}
 	Ereply(cid, AtoE(ars[count]))
 	return
 }
 
-func Next(cid string, s string) {
+func Next(cid string, s string, args []string) {
 	if count >= len(ars) {
-		Reply(cid, "No more")
+		Reply(cid, "No more", nil)
 		return
 	} else {
 		count++
 	}
 	if len(ars) == 0 {
-		Reply(cid, "Get articles first fool")
+		Reply(cid, "Get articles first fool", nil)
 		return
 	}
 	Ereply(cid, AtoE(ars[count]))

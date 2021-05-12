@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/barthr/newsapi"
@@ -31,7 +32,7 @@ func init() {
 }
 
 func main() {
-	commands := map[string]func(cid string, m string){
+	commands := map[string]func(cid string, m string, args []string){
 		"taco": Reply,
 		"xkcd": Xkcd,
 		"get":  Get,
@@ -47,8 +48,9 @@ func main() {
 		if m.Author.ID == s.State.User.ID {
 			return
 		}
-		if r, ok := commands[m.Content]; ok {
-			r(m.ChannelID, m.Content)
+		input := strings.Split(m.Content, " ")
+		if r, ok := commands[input[0]]; ok {
+			r(m.ChannelID, m.Content, input[1:len(input)])
 		}
 	})
 	err := s.Open()
