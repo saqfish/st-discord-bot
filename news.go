@@ -10,7 +10,7 @@ import (
 
 func News(cid string, m string, args []string) {
 	hl, _ := c.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
-		Sources: []string{"google-news", "NPR"},
+		Sources: []string{source},
 	})
 	ars = nil
 	for _, a := range hl.Articles {
@@ -71,4 +71,14 @@ func Next(cid string, s string, args []string) {
 		return
 	}
 	Ereply(cid, AtoE(ars[count]))
+}
+
+func Source(cid string, s string, args []string) {
+	if len(args) < 1 {
+		Reply(cid, "Pick a source: cbs-news, fox-news, google-news, nbc-news, nfl-news, cnn, engadget", nil)
+		return
+	}
+	source = args[0]
+	msg := fmt.Sprintf("Source set to %s", args[0])
+	Reply(cid, msg, nil)
 }

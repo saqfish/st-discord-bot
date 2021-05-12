@@ -16,6 +16,7 @@ var s *discordgo.Session
 var c *newsapi.Client
 var ars []newsapi.Article
 var count int
+var source string
 
 func init() {
 	var err error
@@ -35,6 +36,7 @@ func main() {
 	commands := map[string]func(cid string, m string, args []string){
 		"taco":    Reply,
 		"xkcd":    Xkcd,
+		"source":  Source,
 		"news":    News,
 		"article": Article,
 		"next":    Next,
