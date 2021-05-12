@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -31,10 +32,16 @@ func readComic(body []byte) (*Comic, error) {
 	return s, err
 }
 func Xkcd(cid string, m string, args []string) {
-	num, err := strconv.ParseInt(args[0], 10, 62)
-	if err != nil {
-		Reply(cid, "Invalid arg", nil)
-		return
+	var num int
+	if len(args) == 0 {
+		num = rand.Intn(1000)
+	} else {
+		n, err := strconv.ParseInt(args[0], 10, 62)
+		if err != nil {
+			Reply(cid, "Invalid arg", nil)
+			return
+		}
+		num = int(n)
 	}
 	url := fmt.Sprintf("http://xkcd.com/%d/info.0.json", num)
 	res, err := http.Get(url)

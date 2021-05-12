@@ -16,14 +16,20 @@ func News(cid string, m string, args []string) {
 	for _, a := range hl.Articles {
 		ars = append(ars, a)
 	}
-	msg := fmt.Sprintf("Got %d articles, use article to select aarticle or next & prev to cycle.", len(ars))
+	msg := fmt.Sprintf("Got %d articles, use article to select article or next & prev to cycle.", len(ars))
 	Reply(cid, msg, nil)
 }
 
 func Article(cid string, s string, args []string) {
-	num, err := strconv.ParseInt(args[0], 10, 62)
-	if err != nil {
+	n, err := strconv.ParseInt(args[0], 10, 62)
+	num := int(n)
+	if err != nil || len(args) < 1 {
 		Reply(cid, "Invalid arg", nil)
+		return
+	}
+	if num > len(ars) || num == 0 {
+		msg := fmt.Sprintf("Out of range, there are %d articles", len(ars))
+		Reply(cid, msg, nil)
 		return
 	}
 	if len(ars) < 1 {
@@ -34,7 +40,8 @@ func Article(cid string, s string, args []string) {
 		Reply(cid, "Invalid arg", nil)
 		return
 	}
-	Ereply(cid, AtoE(ars[num]))
+	count = num
+	Ereply(cid, AtoE(ars[num-1]))
 }
 
 func Prev(cid string, s string, args []string) {
