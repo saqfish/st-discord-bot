@@ -1,4 +1,5 @@
 A fun little discord bot for a discord server I'm on. It provides access to:
+
 	* News API
 	* Xkcd API
 
