@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/barthr/newsapi"
 	"github.com/bwmarrin/discordgo"
 )
@@ -22,5 +24,14 @@ func CtoE(c Comic) *discordgo.MessageEmbed {
 		Title:       c.Safe_title,
 		Image:       &discordgo.MessageEmbedImage{URL: c.Img},
 		Description: c.Alt,
+	}
+}
+
+func JokeToEmbed(j Joke) *discordgo.MessageEmbed {
+	p := fmt.Sprintf("||%s||", j.Punchline)
+	return &discordgo.MessageEmbed{
+		Type:        discordgo.EmbedTypeRich,
+		Title:       j.Setup,
+		Description: p,
 	}
 }

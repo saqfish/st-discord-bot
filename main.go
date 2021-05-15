@@ -41,6 +41,7 @@ func main() {
 		"article": Article,
 		"next":    Next,
 		"prev":    Prev,
+		"joke":    Jokes,
 	}
 
 	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
