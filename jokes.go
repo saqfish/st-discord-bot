@@ -19,16 +19,16 @@ func readJoke(body []byte) (*Joke, error) {
 	return j, err
 }
 
-func Jokes(cid string, m string, args []string) {
+func Jokes(cid string, args ...string) {
 	url := "https://official-joke-api.appspot.com/random_joke"
 	res, err := http.Get(url)
 	if err != nil {
-		Reply(cid, "Couldn't get a joke", nil)
+		Reply(cid, "Couldn't get a joke")
 		return
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		Reply(cid, "Couldn't get a joke", nil)
+		Reply(cid, "Couldn't get a joke")
 		return
 	}
 	j, err := readJoke([]byte(body))

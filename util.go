@@ -7,7 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func AtoE(a newsapi.Article) *discordgo.MessageEmbed {
+func ArticleToEmbed(a newsapi.Article) *discordgo.MessageEmbed {
 	return &discordgo.MessageEmbed{
 		URL:         a.URL,
 		Type:        discordgo.EmbedTypeRich,
@@ -17,7 +17,7 @@ func AtoE(a newsapi.Article) *discordgo.MessageEmbed {
 	}
 }
 
-func CtoE(c Comic) *discordgo.MessageEmbed {
+func ComicToEembed(c Comic) *discordgo.MessageEmbed {
 	return &discordgo.MessageEmbed{
 		URL:         c.Img,
 		Type:        discordgo.EmbedTypeRich,

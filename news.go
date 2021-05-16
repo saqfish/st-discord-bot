@@ -3,82 +3,96 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/barthr/newsapi"
 )
 
-func News(cid string, m string, args []string) {
-	hl, _ := c.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
-		Sources: []string{source},
-	})
-	ars = nil
-	for _, a := range hl.Articles {
-		ars = append(ars, a)
-	}
-	msg := fmt.Sprintf("Got %d articles, use article to select article or next & prev to cycle.", len(ars))
-	Reply(cid, msg, nil)
+var nc *newsapi.Client
+var articles []newsapi.Article
+var count int
+var source string
+
+func init() {
+	nc = newsapi.NewClient(os.Args[2], newsapi.WithHTTPClient(http.DefaultClient))
 }
 
-func Article(cid string, s string, args []string) {
+func News(cid string, args ...string) {
+	articles = nil
+
+	hl, _ := nc.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
+		Sources: []string{source},
+	})
+
+	for _, a := range hl.Articles {
+		articles = append(articles, a)
+	}
+
+	msg := fmt.Sprintf("Got %d articles, use article to select article or next & prev to cycle.", len(articles))
+	Reply(cid, msg)
+}
+
+func Article(cid string, args ...string) {
 	n, err := strconv.ParseInt(args[0], 10, 62)
 	num := int(n)
 	if err != nil || len(args) < 1 {
-		Reply(cid, "Invalid arg", nil)
+		Reply(cid, "Invalid arg")
 		return
 	}
-	if num > len(ars) || num == 0 {
-		msg := fmt.Sprintf("Out of range, there are %d articles", len(ars))
-		Reply(cid, msg, nil)
+	if num > len(articles) || num == 0 {
+		msg := fmt.Sprintf("Out of range, there are %d articles", len(articles))
+		Reply(cid, msg)
 		return
 	}
-	if len(ars) < 1 {
-		Reply(cid, "No articles available", nil)
+	if len(articles) < 1 {
+		Reply(cid, "No articles available")
 		return
 	}
-	if int(num) > len(ars) || int(num) < 1 {
-		Reply(cid, "Invalid arg", nil)
+	if int(num) > len(articles) || int(num) < 1 {
+		Reply(cid, "Invalid arg")
 		return
 	}
 	count = num
-	Ereply(cid, AtoE(ars[num-1]))
+	Ereply(cid, ArticleToEmbed(articles[num-1]))
 }
 
-func Prev(cid string, s string, args []string) {
+func Prev(cid string, args ...string) {
 	if count == 0 {
-		Reply(cid, "No more", nil)
+		Reply(cid, "No more")
 		return
 	} else {
 		count--
 	}
-	if len(ars) == 0 {
-		Reply(cid, "Get articles first fool", nil)
+	if len(articles) == 0 {
+		Reply(cid, "Get articles first fool")
 		return
 	}
-	Ereply(cid, AtoE(ars[count]))
+	Ereply(cid, ArticleToEmbed(articles[count]))
 	return
 }
 
-func Next(cid string, s string, args []string) {
-	if count >= len(ars) {
-		Reply(cid, "No more", nil)
+func Next(cid string, args ...string) {
+	if count >= len(articles) {
+		Reply(cid, "No more")
 		return
 	} else {
 		count++
 	}
-	if len(ars) == 0 {
-		Reply(cid, "Get articles first fool", nil)
+	if len(articles) == 0 {
+		Reply(cid, "Get articles first fool")
 		return
 	}
-	Ereply(cid, AtoE(ars[count]))
+	Ereply(cid, ArticleToEmbed(articles[count]))
 }
 
-func Source(cid string, s string, args []string) {
+func Source(cid string, args ...string) {
 	if len(args) < 1 {
-		Reply(cid, "Pick a source: cbs-news, fox-news, google-news, nbc-news, nfl-news, cnn, engadget", nil)
+		Reply(cid, "Pick a source: cbs-news, fox-news, google-news, nbc-news, nfl-news, cnn, engadget")
 		return
 	}
 	source = args[0]
 	msg := fmt.Sprintf("Source set to %s", args[0])
-	Reply(cid, msg, nil)
+	Reply(cid, msg)
 }
