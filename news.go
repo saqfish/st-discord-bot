@@ -22,9 +22,14 @@ func init() {
 func News(cid string, args ...string) {
 	articles = nil
 
-	hl, _ := nc.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
+	hl, err := nc.GetTopHeadlines(context.Background(), &newsapi.TopHeadlineParameters{
 		Sources: []string{source},
 	})
+
+	if err != nil || len(args) < 1 {
+		Reply(cid, "Couldn't get news")
+		return
+	}
 
 	for _, a := range hl.Articles {
 		articles = append(articles, a)
